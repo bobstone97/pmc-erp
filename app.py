@@ -2,6 +2,8 @@
 import streamlit as st
 
 from database.connection import get_session, init_db
+from init_db import seed_admin
+from database.migrate import run_migrations
 from services.auth_service import authenticate, get_user_permissions
 from utils.permissions import clear_session, init_session, set_user_session
 
@@ -13,6 +15,13 @@ st.set_page_config(
 )
 
 init_session()
+
+try:
+    init_db()
+    run_migrations()
+    seed_admin()
+except Exception as e:
+    print(e)
 
 st.markdown(
     """
